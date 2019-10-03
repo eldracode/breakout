@@ -33,6 +33,8 @@ var brickOffsetTop = 30;
 var brickOffsetLeft = 30;
 var score = 0;
 var totalBricks = 0;
+var pause = false
+var pauseLocation = {x: 450, y: 20, px: 19}
 
 var bricks = [];
 for(var c=0; c<brickColumnCount; c++) {
@@ -51,6 +53,7 @@ for(var c=0; c<brickColumnCount; c++) {
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
+canvas.addEventListener("click", clickHandler, false)
 
 function keyDownHandler(e) {
     if(e.key == "Right" || e.key == "ArrowRight") {
@@ -58,6 +61,8 @@ function keyDownHandler(e) {
     }
     else if(e.key == "Left" || e.key == "ArrowLeft") {
         leftPressed = true;
+    }else if(e.key == " "){
+      pause = !pause;
     }
 }
 
@@ -69,6 +74,16 @@ function keyUpHandler(e) {
         leftPressed = false;
     }
 }
+
+function clickHandler(e) {
+  if(pause) return pause = !pause
+  var x = e.pageX - e.target.offsetLeft;
+  var y = e.pageY - e.target.offsetTop;
+  if(x > pauseLocation.x-10 && x < pauseLocation.x+20 && y > pauseLocation.y-20 && y < pauseLocation.y + 5) {
+    pause = !pause
+  }
+}
+
 function collisionDetection() {
   for(var c=0; c<brickColumnCount; c++) {
     for(var r=0; r<brickRowCount; r++) {
@@ -125,9 +140,22 @@ function drawScore() {
   ctx.fillStyle = "#2B2B52";
   ctx.fillText("Score: "+score, 8, 20);
 }
+function drawPausePlay(){
+  if(pause) {
+    ctx.font = "50px Arial Bold";
+    ctx.fillStyle = "#2B2B52";
+    ctx.fillText('START', 150, 120);
+    return
+  }
+  ctx.font = pauseLocation.px + "px Arial Bold";
+  ctx.fillStyle = "#2B2B52";
+  ctx.fillText('P', pauseLocation.x, pauseLocation.y);
+}
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawPausePlay();
+  if(pause) return;
   drawBricks();
   drawBall();
   drawPaddle();
