@@ -6,11 +6,27 @@
     <style>
     	* { padding: 0; margin: 0; }
     	canvas { background: #eee; display: block; margin: 0 auto; }
+      .config-panel{
+        margin-top: 3rem;
+        padding-left: 44%;
+      }
+      .config-tool{
+        line-height: 3rem;
+      }
     </style>
 </head>
 <body>
-
+  
 <canvas id="myCanvas" width="480" height="320"></canvas>
+
+<div class="config-panel">
+  <div class="config-tool">
+    <label>Ball color: </label><input type="color" id="ball-color-input" value="#2B2B52"/> <br/>
+    <label>Paddle color: </label><input type="color" id="paddle-color-input" value="#30336B"/> <br/>
+    <label>Brick color: </label><input type="color" id="brick-color-input" value="#E83350"/> <br/>
+  </div>
+</div>
+
 <script>
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
@@ -33,6 +49,9 @@ var brickOffsetTop = 30;
 var brickOffsetLeft = 30;
 var score = 0;
 var totalBricks = 0;
+var ballColorPicker = document.querySelector("#ball-color-input")
+var paddleColorPicker = document.querySelector("#paddle-color-input")
+var brickColorPicker = document.querySelector("#brick-color-input")
 
 var bricks = [];
 for(var c=0; c<brickColumnCount; c++) {
@@ -89,21 +108,21 @@ function collisionDetection() {
   }
 }
 
-function drawBall() {
+function drawBall(options = {}) {
   ctx.beginPath();
   ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-  ctx.fillStyle = "#2B2B52";
+  ctx.fillStyle = options.color || "#2B2B52";
   ctx.fill();
   ctx.closePath();
 }
-function drawPaddle() {
+function drawPaddle(options = {}) {
   ctx.beginPath();
   ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
-  ctx.fillStyle = "#30336B";
+  ctx.fillStyle = options.color || "#30336B";
   ctx.fill();
   ctx.closePath();
 }
-function drawBricks() {
+function drawBricks(options = {}) {
   for(var c=0; c<brickColumnCount; c++) {
     for(var r=0; r<brickRowCount; r++) {
       if(bricks[c][r].status == 1) {
@@ -113,7 +132,7 @@ function drawBricks() {
         bricks[c][r].y = brickY;
         ctx.beginPath();
         ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = "#E83350";
+        ctx.fillStyle = options.color || "#E83350";
         ctx.fill();
         ctx.closePath();
       }
@@ -128,9 +147,9 @@ function drawScore() {
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawBricks();
-  drawBall();
-  drawPaddle();
+  drawBricks({color: brickColorPicker.value});
+  drawBall({color: ballColorPicker.value});
+  drawPaddle({color: paddleColorPicker.value});
   drawScore();
   collisionDetection();
 
