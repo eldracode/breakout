@@ -10,6 +10,9 @@
 </head>
 <body>
 
+<div class="game-panel">
+</div>
+
 <canvas id="myCanvas" width="480" height="320"></canvas>
 <script>
 var canvas = document.getElementById("myCanvas");
@@ -162,8 +165,25 @@ function draw() {
   y += dy;
 }
 
-var interval = setInterval(draw, 10);    
-  
+function createGamePanel() {
+  const gamePanel = document.querySelector(".game-panel");
+  const playButton = document.createElement("button");
+  const stopButton = document.createElement("button");
+
+  playButton.innerHTML = "Play";
+  stopButton.innerHTML = "Stop";
+
+  gamePanel.appendChild(playButton);
+  gamePanel.appendChild(stopButton);
+
+  let interval;
+
+  playButton.addEventListener("click", () => interval = setInterval(draw, 10));
+  stopButton.addEventListener("click", () => clearInterval(interval));
+}
+
+createGamePanel();
+
 </script>
 
 </body>
