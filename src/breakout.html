@@ -6,12 +6,15 @@
     <style>
     	* { padding: 0; margin: 0; }
     	canvas { background: #eee; display: block; margin: 0 auto; }
+      .game-panel { display: flex; justify-content: center; padding: 25px }
+      .game-panel button { padding: 10px; background: #4CAF50; border: 0; font-weight: bold; color: #fff; cursor: pointer }
+      .game-panel button:last-of-type { background: red; margin-left: 5px }
+      .game-panel button:focus { outline: none }
     </style>
 </head>
 <body>
 
-<div class="game-panel">
-</div>
+<div class="game-panel"></div>
 
 <canvas id="myCanvas" width="480" height="320"></canvas>
 <script>
